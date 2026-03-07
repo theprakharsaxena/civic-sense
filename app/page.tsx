@@ -1,27 +1,19 @@
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import CivicSenseInfo from "./components/CivicSenseInfo";
-import ReportForm from "./components/ReportForm";
 import IssuesFeed from "./components/IssuesFeed";
-import ImpactDashboard from "./components/ImpactDashboard";
-import CivicTips from "./components/CivicTips";
-import WhyDifferent from "./components/WhyDifferent";
 import Footer from "./components/Footer";
 
 export default function Home() {
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-[#fafaf9]">
       <Navbar />
-      <main>
+      <main className="flex-1">
         <HeroSection />
-        <CivicSenseInfo />
-        <ReportForm />
         <IssuesFeed />
-        <ImpactDashboard />
-        <CivicTips />
-        <WhyDifferent />
+        <CivicSenseInfo />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

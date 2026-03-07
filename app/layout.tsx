@@ -1,31 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "CivicPulse — Civic Sense Awareness & Community Reporting",
-  description:
-    "Empowering citizens with civic sense education and community issue reporting. Report potholes, pollution, traffic violations and more. Together, let's build better communities.",
-  keywords: [
-    "civic sense",
-    "community reporting",
-    "issue reporting",
-    "civic awareness",
-    "public safety",
-    "environment",
-    "traffic safety",
-  ],
+  title: "CivicSense - Local issue reporting",
+  description: "Report local issues in your neighborhood like potholes, broken streetlights, or litter.",
 };
 
 export default function RootLayout({
@@ -34,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en">
+      <body className={`${inter.variable} antialiased bg-[#fafaf9] text-stone-900`}>
         {children}
       </body>
     </html>

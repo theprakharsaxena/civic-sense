@@ -3,42 +3,26 @@ import ReportForm from "../components/ReportForm";
 import Footer from "../components/Footer";
 
 export const metadata = {
-    title: "Report an Issue — CivicPulse",
-    description:
-        "Report civic issues in your community — potholes, pollution, broken lights, and more. Be the change your city needs.",
+  title: "Report an issue - CivicSense",
+  description: "Report a local issue in your neighborhood.",
 };
 
 export default function ReportPage() {
-    return (
-        <>
-            <Navbar />
-            <main style={{ paddingTop: 80 }}>
-                <div style={{ textAlign: "center", padding: "60px 24px 0" }}>
-                    <h1
-                        style={{
-                            fontSize: "2.5rem",
-                            fontWeight: 900,
-                            letterSpacing: "-0.02em",
-                            marginBottom: 12,
-                        }}
-                    >
-                        Report a <span className="gradient-text">Civic Issue</span>
-                    </h1>
-                    <p
-                        style={{
-                            color: "var(--text-secondary)",
-                            fontSize: "1.05rem",
-                            maxWidth: 560,
-                            margin: "0 auto",
-                        }}
-                    >
-                        Your report helps improve your community. Fill in the details below
-                        and we&apos;ll make sure it gets noticed.
-                    </p>
-                </div>
-                <ReportForm fullPage />
-            </main>
-            <Footer />
-        </>
-    );
+  return (
+    <div className="min-h-screen flex flex-col bg-[#fafaf9]">
+      <Navbar />
+      <main className="flex-1 py-12 border-b border-stone-200">
+        <div className="max-w-[600px] mx-auto px-6">
+          <h1 className="text-3xl font-bold mb-2 text-stone-900">Report an issue</h1>
+          <p className="text-stone-600 mb-4">
+            Please provide detail to help us locate and address the problem.
+          </p>
+        </div>
+        <div className="bg-white border-y sm:border sm:rounded-lg border-stone-200 max-w-[600px] mx-auto sm:mb-12">
+          <ReportForm fullPage />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
 }

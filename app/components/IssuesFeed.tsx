@@ -9,63 +9,56 @@ export default function IssuesFeed({ fullPage = false }: { fullPage?: boolean })
   const [upvotedIds, setUpvotedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    const initialData = [
-      {
-        id: "1",
-        title: "Big pothole forming on Elm St",
-        description: "Right in front of the bakery, there's a pothole that's getting pretty deep. Hard to avoid when cars are parked on the other side.",
-        location: "Elm St, near 5th Ave",
-        category: "Roads & Sidewalks",
-        status: "Open",
-        date: "2 days ago",
-        author: "Sarah M.",
-        upvotes: 12
-      },
-      {
-        id: "2",
-        title: "Streetlight out",
-        description: "The streetlight on the corner has been completely dark for a week.",
-        location: "Corner of Maple and Oak",
-        category: "Streetlights & Signs",
-        status: "Fixed",
-        date: "1 week ago",
-        author: "Dave",
-        upvotes: 5
-      },
-      {
-        id: "3",
-        title: "Trash bags piled up next to the park bin",
-        description: "Looks like someone dumped their house trash here over the weekend. The bin is full and there are bags piled next to it.",
-        location: "North entrance of City Park",
-        category: "Sanitation & Trash",
-        status: "Open",
-        date: "Just now",
-        author: "Anonymous",
-        upvotes: 1
+    // Fetch live data from backend
+    const loadIssues = async () => {
+      try {
+        const res = await fetch("http://localhost:3001/api/issues");
+        if (res.ok) {
+          const data = await res.json();
+          // Transform Sequelize output slightly if needed
+          const formatted = data.map((item: any) => ({
+            ...item,
+            date: new Date(item.createdAt).toLocaleDateString(),
+            author: item.author || 'Anonymous'
+          }));
+          setIssues(formatted);
+        }
+      } catch (err) {
+        console.error("Failed to fetch issues", err);
       }
-    ];
+    };
     
+    // Load local upvotes from this session
     try {
-      const stored = JSON.parse(localStorage.getItem("civicpulse_issues") || "[]");
-      setIssues([...stored, ...initialData]);
       const storedUpvotes = JSON.parse(localStorage.getItem("civicpulse_upvotes") || "[]");
       setUpvotedIds(new Set(storedUpvotes));
-    } catch {
-      setIssues(initialData);
-    }
+    } catch {}
+    
+    loadIssues();
   }, []);
 
-  const handleUpvote = (id: string) => {
+  const handleUpvote = async (id: string) => {
     if (upvotedIds.has(id)) return;
     
-    const newUpvoted = new Set(upvotedIds);
-    newUpvoted.add(id);
-    setUpvotedIds(newUpvoted);
-    localStorage.setItem("civicpulse_upvotes", JSON.stringify(Array.from(newUpvoted)));
+    try {
+      const res = await fetch(`http://localhost:3001/api/issues/${id}/upvote`, {
+        method: "POST"
+      });
+      if (res.ok) {
+        const updatedIssue = await res.json();
+        
+        const newUpvoted = new Set(upvotedIds);
+        newUpvoted.add(id);
+        setUpvotedIds(newUpvoted);
+        localStorage.setItem("civicpulse_upvotes", JSON.stringify(Array.from(newUpvoted)));
 
-    setIssues(issues.map(issue => 
-      issue.id === id ? { ...issue, upvotes: (issue.upvotes || 0) + 1 } : issue
-    ));
+        setIssues(issues.map(issue => 
+          issue.id === id ? { ...issue, upvotes: updatedIssue.upvotes } : issue
+        ));
+      }
+    } catch (err) {
+      console.error("Failed to upvote", err);
+    }
   };
 
   const filtered = filter === "All" ? issues : issues.filter(i => i.category === filter);

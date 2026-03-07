@@ -14,27 +14,28 @@ export default function ReportForm({ fullPage = false }: { fullPage?: boolean })
     reporterName: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    // simulate network
-    setTimeout(() => {
-      // save to local storage so it shows up
-      const issues = JSON.parse(localStorage.getItem("civicpulse_issues") || "[]");
-      const newIssue = {
-        id: Date.now().toString(),
-        ...formData,
-        status: "Open",
-        date: "Just now",
-        author: formData.reporterName || "Anonymous"
-      };
-      issues.unshift(newIssue);
-      localStorage.setItem("civicpulse_issues", JSON.stringify(issues));
-
+    try {
+      const res = await fetch("http://localhost:3001/api/issues", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      
+      if (res.ok) {
+        setLoading(false);
+        setSubmitted(true);
+      } else {
+        throw new Error("Failed to submit");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit report. Please check if the backend is running on port 3001.");
       setLoading(false);
-      setSubmitted(true);
-    }, 800);
+    }
   };
 
   if (submitted) {

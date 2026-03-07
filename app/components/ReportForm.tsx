@@ -121,7 +121,7 @@ export default function ReportForm({ fullPage = false }: { fullPage?: boolean })
           ></textarea>
         </div>
 
-        <div className="border-t border-stone-200 mt-6 pt-6 pt-6">
+        <div className="border-t border-stone-200 mt-6 pt-6">
           <label className="block text-sm font-medium text-stone-900 mb-1">Your Name (optional)</label>
           <input 
             type="text" 
